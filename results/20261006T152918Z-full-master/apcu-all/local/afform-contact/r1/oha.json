@@ -1,0 +1,1 @@
+{"summary": {"requestsPerSec": 20.687241780588643, "average": 0.1933414171793489}, "latencyPercentiles": {"p50": 0.19283074396662414, "p90": 0.19724233588203788, "p95": 0.20094751007854939, "p99": 0.21549612400121987}, "statusCodeDistribution": {"200": 416}, "errorDistribution": {}}

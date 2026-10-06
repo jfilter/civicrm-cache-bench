@@ -1,0 +1,19 @@
+<af-form ctrl="afform">
+  <af-entity type="Individual" name="Individual1" label="Individual 1" actions="{create: true, update: true}" security="RBAC" url-autofill="1" />
+  <fieldset af-fieldset="Individual1" class="af-container" af-title="Individual 1">
+    <afblock-name-individual></afblock-name-individual>
+    <div af-join="Email" af-repeat="Add" min="1">
+      <afblock-contact-email></afblock-contact-email>
+    </div>
+    <div af-join="Phone" af-repeat="Add" min="1">
+      <afblock-contact-phone></afblock-contact-phone>
+    </div>
+    <div af-join="Address" af-repeat="Add" min="1">
+      <afblock-contact-address></afblock-contact-address>
+    </div>
+    <afblock-custom-interests></afblock-custom-interests>
+    <afblock-custom-membership-details></afblock-custom-membership-details>
+    <afblock-custom-preferences></afblock-custom-preferences>
+  </fieldset>
+  <button class="af-button btn-primary" crm-icon="fa-check" ng-click="afform.submit()">Submit</button>
+</af-form>

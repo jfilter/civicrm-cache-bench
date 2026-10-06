@@ -1,0 +1,38 @@
+{
+  "series": "20261006T163228Z-full-stable",
+  "profile": "full",
+  "cpu": "AMD Ryzen 7 5700X 8-Core Processor",
+  "revision": "uncommitted",
+  "shuffle_seed": 1,
+  "order": [
+    "redis-tiered apcu-all filecache redis-sessions default memcached redis",
+    "apcu-all filecache redis-tiered default memcached redis-sessions redis",
+    "filecache redis-sessions redis-tiered memcached redis apcu-all default"
+  ],
+  "clients": 4,
+  "warmup": "10s",
+  "measure": "20s",
+  "remote_delay": "1ms",
+  "core": "stable",
+  "core_source": null,
+  "php_runtime": {
+    "display_errors": "",
+    "zend.assertions": "-1",
+    "opcache": true,
+    "debug_extensions": []
+  },
+  "governor": "performance",
+  "versions": {
+    "civicrm": "6.18.2",
+    "php": "8.4.26",
+    "mariadb": "mariadb  Ver 15.1 Distrib 10.11.19-MariaDB, for debian-linux-gnu (x86_64) using  EditLine wrapper",
+    "redis": "Redis server v=7.4.11 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=40ff01a501d8e4b6",
+    "oha": "oha 1.16.0",
+    "images": {
+      "app": "sha256:a0da76b925658700353d9c6159cdd52cd4baf3079f2e4ee9b1a92c1c9c48067e",
+      "db": "sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2",
+      "redis": "sha256:858f009f9709ce576febc734aa78b8f6d624b82571f9ddb6bda4377c833b3499",
+      "memcached": "sha256:9e4de012dc607573052061c0bcb38abc775e1dd59b24e7ac38d1892842094aaf"
+    }
+  }
+}

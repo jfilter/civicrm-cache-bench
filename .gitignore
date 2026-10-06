@@ -1,0 +1,5 @@
+/results/*/tmp/
+REVISION
+/image/core/*.tar.gz
+/image/core/*.txt
+__pycache__/

@@ -1,0 +1,22 @@
+# Hooks the bench_* functions from image/cache-settings.php into core cache creation.
+# Applied with patch -p1 in /var/www/html/core; core behaves unchanged while BENCH_TIERS is empty.
+--- a/CRM/Utils/Cache.php	2026-10-06 15:23:45
++++ b/CRM/Utils/Cache.php	2026-10-06 15:23:46
+@@ -206,7 +206,7 @@
+     foreach ($types as $type) {
+       switch ($type) {
+         case '*memory*':
+-          if (defined('CIVICRM_DB_CACHE_CLASS') && in_array(CIVICRM_DB_CACHE_CLASS, ['Memcache', 'Memcached', 'Redis', 'FileCache'])) {
++          if (defined('CIVICRM_DB_CACHE_CLASS') && in_array(CIVICRM_DB_CACHE_CLASS, bench_memory_classes(['Memcache', 'Memcached', 'Redis', 'FileCache']))) {
+             $cache = static::createStandard(CIVICRM_DB_CACHE_CLASS, $scopeId, $params);
+             break 2;
+           }
+@@ -246,7 +246,7 @@
+     $dbCacheClass = 'CRM_Utils_Cache_' . $class;
+     $settings = self::getCacheSettings($class);
+     $settings['prefix'] = ($settings['prefix'] ?? '') . self::DELIMITER . $shortName . $scopeId;
+-    $cache = new $dbCacheClass($settings);
++    $cache = bench_cache_tiers(new $dbCacheClass($settings), $settings['prefix']);
+     if (!empty($params['withArray'])) {
+       $cache = $params['withArray'] === 'fast' ? new CRM_Utils_Cache_FastArrayDecorator($cache) : new CRM_Utils_Cache_ArrayDecorator($cache);
+     }

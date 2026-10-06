@@ -1,0 +1,76 @@
+# Benchmark stack. The variant comes from variants/<name>.env (see bench/run.sh).
+name: cachebench
+
+x-db-env: &db-env
+  CIVICRM_DB_HOST: db
+  CIVICRM_DB_NAME: civicrm
+  CIVICRM_DB_USER: civicrm
+  CIVICRM_DB_PASSWORD: civicrm
+
+services:
+  app:
+    build:
+      context: image
+      args:
+        CORE: ${BENCH_CORE:-stable}
+    image: cachebench-app:${BENCH_CORE:-stable}
+    depends_on:
+      db: {condition: service_healthy}
+    cpuset: "2,3,10,11"
+    cpus: 4
+    mem_limit: 4g
+    environment:
+      <<: *db-env
+      CIVICRM_AUTO_INSTALL: "1"
+      CIVIKITCHEN_SITE_URL: http://app
+      CIVIKITCHEN_TEST_DB: "0"
+      CIVIKITCHEN_DEMO_USER: admin
+      BENCH_CACHE_CLASS: ${BENCH_CACHE_CLASS:-}
+      BENCH_CACHE_HOST: ${BENCH_CACHE_HOST:-}
+      BENCH_CACHE_PORT: ${BENCH_CACHE_PORT:-}
+      BENCH_CACHE_PASSWORD: ${BENCH_CACHE_PASSWORD:-}
+      BENCH_CACHE_PREFIX: bench
+      BENCH_SESSION_HANDLER: ${BENCH_SESSION_HANDLER:-files}
+      BENCH_SESSION_SAVE_PATH: ${BENCH_SESSION_SAVE_PATH:-}
+      BENCH_TIERS: ${BENCH_TIERS:-}
+    volumes:
+      - private:/var/www/html/private
+      - ./bench:/bench:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/civicrm/login"]
+      interval: 5s
+      retries: 120
+
+  db:
+    image: mariadb@sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2 # 10.11
+    command: --log-bin-trust-function-creators=1 --innodb-buffer-pool-size=2G
+    cpuset: "4,12"
+    cpus: 2
+    mem_limit: 4g
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: civicrm
+      MYSQL_USER: civicrm
+      MYSQL_PASSWORD: civicrm
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      retries: 60
+
+  redis:
+    image: redis@sha256:858f009f9709ce576febc734aa78b8f6d624b82571f9ddb6bda4377c833b3499 # 7-alpine
+    command: redis-server --requirepass bench --save "" --appendonly no
+    cpuset: "5,13"
+    cpus: 1
+
+  memcached:
+    image: memcached@sha256:9e4de012dc607573052061c0bcb38abc775e1dd59b24e7ac38d1892842094aaf # 1.6-alpine
+    command: memcached -m 512
+    cpuset: "6,14"
+    cpus: 1
+
+volumes:
+  private:
+  dbdata:

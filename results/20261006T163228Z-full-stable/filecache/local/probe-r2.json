@@ -1,0 +1,27 @@
+{
+    "driver": "FileCache",
+    "ok": true,
+    "mismatch": [],
+    "actual": {
+        "default": "CRM_Utils_Cache_FileCache",
+        "prevNextCache": "CRM_Utils_Cache_SqlGroup",
+        "prevnext_driver": "CRM_Core_PrevNextCache_Sql",
+        "session_save_handler": "files",
+        "environment": "Production",
+        "debug_enabled": false,
+        "backtrace": false,
+        "session": "CRM_Utils_Cache_FileCache",
+        "settings": "CRM_Utils_Cache_FileCache",
+        "long": "CRM_Utils_Cache_FileCache",
+        "metadata": "CRM_Utils_Cache_FileCache",
+        "navigation": "CRM_Utils_Cache_FileCache",
+        "fields": "CRM_Utils_Cache_FileCache",
+        "groups": "CRM_Utils_Cache_FileCache",
+        "customData": "CRM_Utils_Cache_FileCache",
+        "contactTypes": "CRM_Utils_Cache_FileCache",
+        "js_strings": "CRM_Utils_Cache_FileCache",
+        "community_messages": "CRM_Utils_Cache_FileCache",
+        "checks": "CRM_Utils_Cache_FileCache",
+        "angular": "CRM_Utils_Cache_FileCache"
+    }
+}

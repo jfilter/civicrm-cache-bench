@@ -1,0 +1,27 @@
+{
+    "driver": "Redis",
+    "ok": true,
+    "mismatch": [],
+    "actual": {
+        "default": "CRM_Utils_Cache_Redis",
+        "prevNextCache": "CRM_Utils_Cache_SqlGroup",
+        "prevnext_driver": "CRM_Core_PrevNextCache_Redis",
+        "session_save_handler": "files",
+        "environment": "Production",
+        "debug_enabled": false,
+        "backtrace": false,
+        "session": "CRM_Utils_Cache_Redis",
+        "settings": "CRM_Utils_Cache_Redis",
+        "long": "CRM_Utils_Cache_Redis",
+        "metadata": "CRM_Utils_Cache_Redis",
+        "navigation": "CRM_Utils_Cache_Redis",
+        "fields": "CRM_Utils_Cache_Redis",
+        "groups": "CRM_Utils_Cache_Redis",
+        "customData": "CRM_Utils_Cache_Redis",
+        "contactTypes": "CRM_Utils_Cache_Redis",
+        "js_strings": "CRM_Utils_Cache_Redis",
+        "community_messages": "CRM_Utils_Cache_Redis",
+        "checks": "CRM_Utils_Cache_Redis",
+        "angular": "CRM_Utils_Cache_Redis"
+    }
+}
