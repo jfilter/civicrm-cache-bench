@@ -1,15 +1,49 @@
 # civicrm-cache-bench
 
-Measures how CiviCRM's response times change with the cache backend: the
-default (MySQL), Redis, Redis with PHP sessions, Memcached, the file cache, and
-two APCu layouts core cannot configure on its own (APCu in front of Redis, all
-named caches in APCu).
+CiviCRM keeps its internal caches — sessions, settings, metadata, navigation
+and more — in MySQL by default; `CIVICRM_DB_CACHE_CLASS` moves them to Redis,
+Memcached or files. This benchmark measures what that does to response times:
+the default (MySQL), Redis, Redis with PHP sessions, Memcached, the file cache,
+and two APCu layouts core cannot configure on its own (APCu in front of Redis,
+all named caches in APCu).
 Everything runs in Docker on one host with a synthetic dataset of 50 000
-contacts.
+contacts, real HTTP requests through Apache and PHP, and production PHP
+settings.
 
-The design — matrix, scenarios, validity rules — is in
-[docs/method.md](docs/method.md).
-Findings are in [docs/results.md](docs/results.md).
+## Summary
+
+Moving the caches out of MySQL into memory makes contact and contribution
+pages about 20–25 % faster. Which memory backend matters little: Redis,
+Memcached and APCu land within a few milliseconds of each other on most pages.
+Redis is the sensible default; the file cache is slower than MySQL.
+
+Median response time (p50, ms) on CiviCRM 6.18.2, local database, 4 parallel
+clients, median of 3 repetitions (2026-10-06):
+
+| Page | MySQL (default) | Redis | Redis + sessions | Memcached | File cache | APCu (patched) |
+|---|---|---|---|---|---|---|
+| Contact view (admin) | 172 | 139 | 133 | 141 | 135 | 129 |
+| Smart-group search (admin) | 163 | 171 | 169 | 165 | 300 | 143 |
+| Contribution page (anonymous) | 100 | 75 | 73 | 97 | 142 | 72 |
+| Event info (anonymous) | 63 | 60 | 58 | 62 | 60 | 58 |
+| FormBuilder form with prefill (admin) | 311 | 286 | 285 | 289 | 288 | 278 |
+
+- **Redis** cuts contact view by 19 % and the contribution page by 25 %.
+  Storing PHP sessions in Redis as well saves another 1–6 ms per request.
+- **Memcached** matches Redis on contact view but gains almost nothing on the
+  contribution page.
+- **File cache** nearly doubles the smart-group search time.
+- **APCu** is fastest or tied on every page, but core needs a patch to put the
+  named caches there, and APCu is local to one web server.
+- **Smart-group search** gets no faster with Redis or Memcached; its smart-group
+  cache is an SQL table in every variant.
+- **Upgrading core** can matter more than the backend: the nightly 6.20 build
+  serves the FormBuilder form 27–31 % faster with every backend (Redis
+  286 → 201 ms), while server-rendered pages are 2–5 % slower.
+
+Test machine and the full core comparison are in
+[docs/results.md](docs/results.md); matrix, scenarios and validity rules in
+[docs/method.md](docs/method.md). Raw results are committed under `results/`.
 
 ## Requirements
 
